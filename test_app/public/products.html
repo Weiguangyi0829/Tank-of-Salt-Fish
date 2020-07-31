@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="./axios.min.js"></script>
+    <script>
+        function getProducts() {
+
+            axios.get('/product/get_products').then(function (result) {
+                var productsData = result.data;
+                if (productsData.status === 100) {
+                    painProducts(productsData.data.products);
+
+
+                }else if(productsData.status === 10005){
+                    // location.href ='./login.html'
+                }
+            })
+        }
+
+        function painProducts(products) {
+            var product_body = document.getElementById('product_body');
+            for (let product of products) {
+                var tr = document.createElement('tr');
+                tr.innerHTML = `
+            <td>${product.name}</td>
+            <td>${product.price}</td>
+            <td>${product.count}</td>
+            <td><button onclick="del_products('${product._id}')">删除</button></td>
+            `
+                product_body.appendChild(tr);
+            }
+        }
+
+        function addProduct() {
+            var name = document.getElementById('name').value;
+            var price = document.getElementById('price').value;
+            var count = document.getElementById('count').value;
+            axios.post('/product/add_products', {
+                name,
+                price,
+                count
+            }).then(function (result) {
+                if (result.data.status === 100) {
+                    location.reload(true);
+                }
+            })
+        }
+
+        function del_products(_id) {
+            axios.post('/product/del_products', {
+                _id
+            }).then(function (result) {
+                if (result.data.status === 100) {
+                    location.reload(true);
+                }
+            })
+        }
+
+        window.onload = function () {
+            getProducts();
+        }
+    </script>
+    <style>
+        .border {
+            border: slategrey 1px solid;
+        }
+    </style>
+</head>
+
+<body>
+    <table class="border" id="product_table">
+        <thead>
+            <tr>
+                <th>产品名称</th>
+                <th>单价</th>
+                <th>数量</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody id="product_body">
+        </tbody>
+    </table>
+    <hr>
+    <div>
+        <input type="text" name="" id="name">
+        <input type="number" name="" id="price">
+        <input type="number" name="" id="count">
+        <button onclick="addProduct()">添加</button>
+    </div>
+</body>
+
+</html>
