@@ -1,6 +1,6 @@
 # saltfish
 
-> 咸鱼缸
+> A Vue.js project
 
 ## Build Setup
 
