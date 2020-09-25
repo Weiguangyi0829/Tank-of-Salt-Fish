@@ -35,6 +35,7 @@ export default {
 
           if (result.data.status === 100) {
             console.log('100');
+            //跳转页面
           }
         })
         .catch((err) => {
